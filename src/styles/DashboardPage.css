@@ -1,0 +1,187 @@
+/* src/pages/DashboardPage.css */
+
+/* Basic resets */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Container for entire page */
+.dashboard-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin: 0;
+  color: #333;
+}
+
+/* New Project button */
+.create-button {
+  background-color: #d16ba5;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+  background-color: #bc5c92;
+}
+
+/* Two-column layout for project lists */
+.projects-section {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Project list card */
+.project-list {
+  flex: 1;
+  min-width: 300px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.project-list h2 {
+  margin-top: 0;
+  color: #444;
+}
+
+/* Project items in an unordered list */
+.project-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-list li {
+  border-bottom: 1px solid #eee;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.project-list li:hover {
+  background-color: #fafafa;
+}
+
+.project-list li h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.project-list li p {
+  margin: 0.25rem 0 0 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal content box */
+.modal-overlay .modal-content {
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+/* Create form inside the modal */
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  background-color: white;
+}
+
+.create-form label {
+  font-weight: 600;
+  color: #555;
+}
+
+.create-form input,
+.create-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: none;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Submit & Cancel buttons */
+.submit-button {
+  background-color: #86a8e7;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #6592d0;
+}
+
+.cancel-button {
+  background-color: #ccc;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #bbb;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .projects-section {
+    flex-direction: column;
+  }
+}
