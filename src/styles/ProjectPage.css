@@ -1,0 +1,114 @@
+/* src/pages/ProjectPage.css */
+
+.project-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.project-header {
+  margin-bottom: 1.5rem;
+}
+
+.project-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.project-header p {
+  color: #555;
+  margin: 0.25rem 0 1rem;
+}
+
+.owner-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.owner-controls button {
+  background-color: #d16ba5;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.project-details {
+  margin-bottom: 2rem;
+}
+
+.project-details h3 {
+  margin-top: 0;
+  color: #444;
+}
+
+.project-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-details li {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem 0;
+}
+
+/* MODAL OVERLAY */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MODAL CONTENT */
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Form buttons in modal */
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-button {
+  background-color: #86a8e7;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #ccc;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Additional style for the "delete project" or "remove task" button, if you want */
+.delete-button {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
