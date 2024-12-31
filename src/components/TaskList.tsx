@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import '../styles/TaskList.css';
 
-import { Task } from '../types/Task.ts';
-import { useGeneratePriority, useDeleteTask, useUpdateTask } from '../api/queries/useTasks.ts';
-import { useProjectMembers } from '../api/queries/useProjects.ts';
-import CreateTaskModal from './CreateTaskModal.tsx';
+import { Task } from '../types/Task';
+import { useGeneratePriority, useDeleteTask, useUpdateTask } from '../api/queries/useTasks';
+import { useProjectMembers } from '../api/queries/useProjects';
+import CreateTaskModal from './CreateTaskModal';
 
 interface TaskListProps {
   projectId: number;
@@ -134,31 +134,35 @@ function TaskList({ projectId, tasks }: TaskListProps) {
           <div className="modal-content">
             <h3>Edit Task</h3>
             <form className='create-form' onSubmit={handleUpdateTask}>
-              <label>Title</label>
+              <label htmlFor='title'>Title</label>
               <input
+                id='title'
                 type="text"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 required
               />
 
-              <label>Description</label>
+              <label htmlFor='description'>Description</label>
               <textarea
+                id='description'
                 rows={3}
                 value={editDesc}
                 onChange={(e) => setEditDesc(e.target.value)}
               />
 
-              <label>Due Date</label>
+              <label htmlFor='due-date'>Due Date</label>
               <input
+                id='due-date'
                 type="date"
                 value={editDueDate}
                 onChange={(e) => setEditDueDate(e.target.value)}
               />
 
-              <label>Priority</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <label htmlFor='priority'>Priority</label>
                 <input
+                  id='priority'
                   type="text"
                   value={editPriority}
                   onChange={(e) => setEditPriority(e.target.value)}
@@ -168,15 +172,17 @@ function TaskList({ projectId, tasks }: TaskListProps) {
                 </button>
               </div>
 
-              <label>Status</label>
+              <label htmlFor='status'>Status</label>
               <input
+                id='status'
                 type="text"
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value)}
               />
 
-              <label>Assigned To</label>
+              <label htmlFor='assign-to'>Assigned To</label>
               <select
+                id='assign-to'
                 onChange={(e) => {
                   setEditAssignedTo(Number(e.target.value));
                 }}

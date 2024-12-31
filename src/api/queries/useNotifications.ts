@@ -1,8 +1,8 @@
 // src/api/queries/useNotifications.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosClient from '../axiosClient.ts';
-import { Notification } from '../../types/Notification.ts'; // Adjust to your actual interface
+import axiosClient from '../axiosClient';
+import { Notification } from '../../types/Notification'; // Adjust to your actual interface
 
 /***********************************
  * Minimal interfaces for payloads

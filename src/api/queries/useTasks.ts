@@ -1,7 +1,7 @@
 // src/api/queries/useTasks.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosClient from '../axiosClient.ts';
+import axiosClient from '../axiosClient';
 import { Task } from '../../types/Task'; // Adjust this import path as needed
 
 /***********************************

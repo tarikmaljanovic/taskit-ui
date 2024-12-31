@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogin, useCreateUser } from '../api/queries/useUser.ts';
+import { useLogin, useCreateUser } from '../api/queries/useUser';
 import '../styles/LoginPage.css';
 
 const LoginPage: React.FC = () => {
@@ -165,7 +165,7 @@ const LoginPage: React.FC = () => {
               )}
 
               <button type="submit" className="login-button">
-                Sign Up'
+                Sign Up
               </button>
             </form>
 
@@ -215,7 +215,7 @@ const LoginPage: React.FC = () => {
               )}
 
               <button type="submit" className="login-button">
-                Log In'
+                Log In
               </button>
             </form>
 
