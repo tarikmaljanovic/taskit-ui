@@ -234,6 +234,7 @@ export function useDeleteTask() {
     onSuccess: (data, taskId) => {
       queryClient.invalidateQueries({ queryKey: ['allTasks'] });
       queryClient.invalidateQueries({ queryKey: ['taskById', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['projectTasks'] });
       // If your data model includes user or project references,
       // you can also invalidate those queries here as well.
     },

@@ -2,16 +2,17 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskList from '../../components/TaskList';
 import { MemoryRouter } from 'react-router-dom';
-
-
-const mockMutate = jest.fn();
+import exp from 'constants';
+import { useDeleteTask, useProjectTasks } from '../../api/queries/useTasks';
+import { act } from 'react';
 
 // Mocking the React Query hooks
 jest.mock("../../api/queries/useTasks", () => ({
   useCreateTask: jest.fn(),
-  useDeleteTask: jest.fn().mockReturnValue({mutate: jest.fn()}),
+  useDeleteTask: jest.fn(),
   useUpdateTask: jest.fn(),
   useGeneratePriority: jest.fn(),
+  useProjectTasks: jest.fn(),
 }));
 
 jest.mock("../../api/queries/useProjects", () => ({
@@ -24,19 +25,24 @@ const mockMembers = [
   { id: 2, name: 'Member 2', email: 'member2@example.com' }
 ];
 
-const mockTasks = [
+let mockTasks = [
   { id: 1, title: 'Task 1', due_date: '2024-12-31', priority: 'High', status: 'In Progress', assigned_to: { name: 'Member 1', email: 'member1@example.com' }, project: { id: 1 } },
   { id: 2, title: 'Task 2', due_date: '2024-12-31', priority: 'Low', status: 'Completed', assigned_to: { name: 'Member 2', email: 'member2@example.com' }, project: { id: 1 } }
+];
+
+let mockUpdatedTasks = [
+  { id: 2, title: 'Task 2', due_date: '2024-12-31', priority: 'Low', status: 'Completed', assigned_to: { name: 'Member 2' } },
 ];
 
 describe("TaskList Component", () => {
   beforeEach(() => {
     // Mocking API responses
     require("../../api/queries/useProjects").useProjectMembers.mockReturnValue({ data: mockMembers });
-    require("../../api/queries/useTasks").useDeleteTask.mockReturnValue({ mutate: mockMutate });
-    require("../../api/queries/useTasks").useUpdateTask.mockReturnValue({ mutate: mockMutate });
-    require("../../api/queries/useTasks").useCreateTask.mockReturnValue({ mutate: mockMutate });
+    require("../../api/queries/useTasks").useDeleteTask.mockReturnValue({ mutate: jest.fn() });
+    require("../../api/queries/useTasks").useUpdateTask.mockReturnValue({ mutate: jest.fn() });
+    require("../../api/queries/useTasks").useCreateTask.mockReturnValue({ mutate: jest.fn() });
     require("../../api/queries/useTasks").useGeneratePriority.mockReturnValue({ mutateAsync: jest.fn().mockResolvedValue('High') });
+    require("../../api/queries/useTasks").useProjectTasks.mockReturnValue({ data: mockTasks });
   });
 
   it("renders tasks correctly", () => {
@@ -127,7 +133,7 @@ describe("TaskList Component", () => {
   it("opens the create task modal when 'Create Task' is clicked", () => {
     render(
       <MemoryRouter>
-        <TaskList projectId={1} tasks={mockTasks} />
+        <TaskList projectId={1} />
       </MemoryRouter>
     );
 
@@ -142,32 +148,43 @@ describe("TaskList Component", () => {
     expect(screen.getByLabelText("Status")).toBeInTheDocument();
   });
 
-  it("deletes a task when the 'Remove Task' button is clicked", async () => {
-    const mockClose = jest.fn();
-  
+  it("deletes a task when the 'Remove Button' is clicked", async() => {
     render(
       <MemoryRouter>
-        <TaskList projectId={1} tasks={mockTasks} />
+        <TaskList projectId={1} />
       </MemoryRouter>
     );
-  
-    // Click on Task 1 to open the modal
-    fireEvent.click(screen.getByText("Task 1"));
-  
-    // Mock window.confirm to return true for deletion
+    // Ensure task 1 and task 2 are rendered
+    expect(screen.getByText('Task 1')).toBeInTheDocument();
+    expect(screen.getByText('Task 2')).toBeInTheDocument();
+
+    require("../../api/queries/useTasks").useProjectTasks.mockReturnValue({ data: mockUpdatedTasks });
+
+    expect(screen.queryByText('Task 1')).toBeInTheDocument();
+    expect(screen.queryByText('Task 2')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Task 1'));
+
+    // Mock window.confirm to simulate clicking "OK"
     window.confirm = jest.fn().mockReturnValue(true);
-  
-    // Simulate clicking the "Remove Task" button
-    fireEvent.click(screen.getByRole("button", { name: "Remove Task" }));
-  
-    // Wait for the mutation to be called
+
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Task' }));
+
+
+    // Ensure the mutation is called correctly with task ID
     await waitFor(() => {
-      // Ensure the mutation was called with the correct task ID
-      expect(mockMutate).toHaveBeenCalledWith(1, {
+      expect(require('../../api/queries/useTasks').useDeleteTask().mutate).toHaveBeenCalledWith(1, expect.objectContaining({
         onSuccess: expect.any(Function),
         onError: expect.any(Function),
-      }); // Task ID for Task 1
+      }));
     });
-  });
-  
+
+    // Wait for the task list to be updated and Task 1 to be removed
+    await waitFor(() => {
+      expect(screen.queryByText('Task 1')).not.toBeInTheDocument();
+    });
+
+    // Ensure Task 2 is still present
+    expect(screen.getByText('Task 2')).toBeInTheDocument();
+  })
 });

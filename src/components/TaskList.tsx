@@ -1,19 +1,19 @@
-// src/components/TaskList.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/TaskList.css';
-
 import { Task } from '../types/Task';
-import { useGeneratePriority, useDeleteTask, useUpdateTask } from '../api/queries/useTasks';
+import { useGeneratePriority, useDeleteTask, useUpdateTask, useProjectTasks } from '../api/queries/useTasks';
 import { useProjectMembers } from '../api/queries/useProjects';
 import CreateTaskModal from './CreateTaskModal';
 
 interface TaskListProps {
   projectId: number;
-  tasks: Task[];
 }
 
-function TaskList({ projectId, tasks }: TaskListProps) {
+function TaskList({ projectId }: TaskListProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
+  
+  // Fetch tasks using useProjectTasks hook
+  const { data: taskList, refetch } = useProjectTasks(projectId); // Automatically fetches tasks for the project
 
   // State for editing a selected task
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -97,6 +97,10 @@ function TaskList({ projectId, tasks }: TaskListProps) {
     }
   };
 
+  if (!taskList) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="task-list-container">
       <div className="task-list-header">
@@ -104,11 +108,11 @@ function TaskList({ projectId, tasks }: TaskListProps) {
         <button onClick={() => setShowCreateModal(true)}>Create Task</button>
       </div>
 
-      {tasks.length === 0 ? (
+      {taskList.length === 0 ? (
         <p>No tasks yet.</p>
       ) : (
         <ul className="task-list">
-          {tasks.map((t) => (
+          {taskList.map((t) => (
             <li key={t.id} onClick={() => handleOpenTaskModal(t)}>
               <strong>{t.title}</strong>
               <p>Due: {t.due_date.split("T")[0] || 'N/A'}</p>
@@ -208,7 +212,8 @@ function TaskList({ projectId, tasks }: TaskListProps) {
                 <button
                   type="button"
                   className="delete-button"
-                  onClick={handleDeleteTask}
+                  data-testid={`remove-task-${selectedTask?.id}`}
+                  onClick={() => handleDeleteTask()}
                 >
                   Remove Task
                 </button>

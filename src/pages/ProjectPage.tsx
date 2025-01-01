@@ -165,7 +165,7 @@ function ProjectPage() {
       </div>
 
       {/* TaskList is a separate component */}
-      <TaskList projectId={project_id} tasks={tasks || []} />
+      <TaskList projectId={project_id} />
 
       {/* EDIT PROJECT MODAL */}
       {showEditModal && (
