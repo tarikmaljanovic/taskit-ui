@@ -10,12 +10,12 @@ import {
   useUpdateProject,
   useAddMemberToProject,
   useProjectMembers,
-} from '../api/queries/useProjects.ts';
-import { useAllUsers } from '../api/queries/useUser.ts';
+} from '../api/queries/useProjects';
+import { useAllUsers } from '../api/queries/useUser';
 
-import TaskList from '../components/TaskList.tsx';
-import { useProjectTasks } from '../api/queries/useTasks.ts';
-import { User } from '../types/User.ts';
+import TaskList from '../components/TaskList';
+import { useProjectTasks } from '../api/queries/useTasks';
+import { User } from '../types/User';
 
 function ProjectPage() {
   const { projectId } = useParams();
@@ -165,7 +165,7 @@ function ProjectPage() {
       </div>
 
       {/* TaskList is a separate component */}
-      <TaskList projectId={project_id} tasks={tasks || []} />
+      <TaskList projectId={project_id} />
 
       {/* EDIT PROJECT MODAL */}
       {showEditModal && (
@@ -173,16 +173,18 @@ function ProjectPage() {
           <div className="modal-content">
             <h2>Edit Project</h2>
             <form className='create-form' onSubmit={handleUpdateProject}>
-              <label>Project Name</label>
+              <label htmlFor='projectName'>Project Name</label>
               <input
+                id='projectName'
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 required
               />
 
-              <label>Project Description</label>
+              <label htmlFor='projectDesc'>Project Description</label>
               <textarea
+                id='projectDesc'
                 rows={3}
                 value={editDesc}
                 onChange={(e) => setEditDesc(e.target.value)}

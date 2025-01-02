@@ -1,7 +1,7 @@
 // src/api/queries/useTasks.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosClient from '../axiosClient.ts';
+import axiosClient from '../axiosClient';
 import { Task } from '../../types/Task'; // Adjust this import path as needed
 
 /***********************************
@@ -234,6 +234,7 @@ export function useDeleteTask() {
     onSuccess: (data, taskId) => {
       queryClient.invalidateQueries({ queryKey: ['allTasks'] });
       queryClient.invalidateQueries({ queryKey: ['taskById', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['projectTasks'] });
       // If your data model includes user or project references,
       // you can also invalidate those queries here as well.
     },

@@ -1,7 +1,7 @@
 // src/api/queries/useProjects.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosClient from '../axiosClient.ts';
+import axiosClient from '../axiosClient';
 import { Project } from '../../types/Project';  // Replace with your actual project interface
 import { User } from '../../types/User';        // Replace with your actual user interface
 

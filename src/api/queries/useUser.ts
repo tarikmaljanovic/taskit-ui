@@ -1,7 +1,7 @@
 // src/api/queries/useUser.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosClient from '../axiosClient.ts';
+import axiosClient from '../axiosClient';
 import { User } from '../../types/User'; // Adjust import path as needed
 
 /***********************************

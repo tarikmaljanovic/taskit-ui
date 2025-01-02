@@ -1,7 +1,7 @@
 // src/components/CreateTaskModal.tsx
 import React, { useState } from 'react';
-import { useCreateTask, useGeneratePriority } from '../api/queries/useTasks.ts';
-import { useProjectMembers } from '../api/queries/useProjects.ts';
+import { useCreateTask, useGeneratePriority } from '../api/queries/useTasks';
+import { useProjectMembers } from '../api/queries/useProjects';
 import '../styles/TaskList.css';
 
 interface CreateTaskModalProps {
@@ -61,31 +61,35 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
       <div className="modal-content">
         <h3>Create Task</h3>
         <form className='create-form' onSubmit={handleCreateTask}>
-          <label>Title</label>
+          <label htmlFor='title'>Title</label>
           <input
+            id='title'
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
 
-          <label>Description</label>
+          <label htmlFor='description'>Description</label>
           <textarea
+            id='description'
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <label>Due Date</label>
+          <label htmlFor='due-date'>Due Date</label>
           <input
+            id='due-date'
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
 
-          <label>Priority</label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <label htmlFor='priority'>Priority</label>
             <input
+              id='priority'
               type="text"
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
@@ -95,15 +99,16 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
             </button>
           </div>
 
-          <label>Status</label>
+          <label htmlFor='status'>Status</label>
           <input
+            id='status'
             type="text"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           />
 
-          <label>Assign To</label>
-          <select onChange={(e) =>{
+          <label htmlFor='assign-to'>Assign To</label>
+          <select id='assign-to' onChange={(e) =>{
             setAssignedTo(Number(e.target.value));
           }}>
             {

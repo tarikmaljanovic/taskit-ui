@@ -8,11 +8,11 @@ import {
   useMyProjects,
   useOwnedProjects,
   useCreateProject,
-} from '../api/queries/useProjects.ts';
+} from '../api/queries/useProjects';
 import {
   useUserNotifications
-} from '../api/queries/useNotifications.ts';
-import { Project } from '../types/Project.ts'; // Import your existing Project interface
+} from '../api/queries/useNotifications';
+import { Project } from '../types/Project'; // Import your existing Project interface
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();

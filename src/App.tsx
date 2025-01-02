@@ -1,11 +1,12 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import LoginPage from './pages/LoginPage.tsx';
-import DashboardPage from './pages/DashboardPage.tsx';
-import ProjectPage from './pages/ProjectPage.tsx';
-import NotFoundPage from './pages/NotFoundPage.tsx';
-import Navbar from './components/layout/Navbar.tsx';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import ProjectPage from './pages/ProjectPage';
+import NotFoundPage from './pages/NotFoundPage';
+import Navbar from './components/layout/Navbar';
+
 
 function AppContent() {
   const location = useLocation();
