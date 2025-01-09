@@ -33,6 +33,25 @@ const DashboardPage: React.FC = () => {
   const { data: myProjects } = useMyProjects(userId || undefined);
   const { data: ownedProjects } = useOwnedProjects(userId || undefined);
   const { data: notifications } = useUserNotifications(userId || undefined);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    if (myProjects && ownedProjects) {
+      setProjects([...myProjects, ...ownedProjects]);
+    }
+  }, [myProjects, ownedProjects]);
+
+  const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    if (filter === 'my') {
+      setProjects(myProjects || []);
+    } else if(filter === 'owned') {
+      setProjects(ownedProjects || []);
+    } else {
+      setProjects([...(myProjects || []), ...(ownedProjects || [])]);
+    }
+  }, [filter])
 
   // 3) State to control "Create Project" modal/form
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -88,32 +107,21 @@ const DashboardPage: React.FC = () => {
         <button className="create-button" onClick={openCreateModal}>
           + New Project
         </button>
+        <select onChange={(e) => setFilter(e.target.value)}>
+          <option value="all">All Projects</option>
+          <option value="my">My Projects</option>
+          <option value="owned">Owned Projects</option>
+        </select>
       </div>
 
       <div className="projects-section">
         <div className="project-list">
           <h2>My Projects</h2>
-          {myProjectsList.length === 0 ? (
+          {projects.length === 0 ? (
             <p>No projects found.</p>
           ) : (
             <ul>
-              {myProjectsList.map((proj: Project) => (
-                <li key={proj.id} onClick={() => handleProjectClick(proj.id)}>
-                  <h3>{proj.name}</h3>
-                  <p>{proj.description}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="project-list">
-          <h2>Projects I Created</h2>
-          {ownedProjectsList.length === 0 ? (
-            <p>No created projects yet.</p>
-          ) : (
-            <ul>
-              {ownedProjectsList.map((proj: Project) => (
+              {projects.map((proj: Project) => (
                 <li key={proj.id} onClick={() => handleProjectClick(proj.id)}>
                   <h3>{proj.name}</h3>
                   <p>{proj.description}</p>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/TaskList.css';
 import { Task } from '../types/Task';
-import { useGeneratePriority, useDeleteTask, useUpdateTask, useProjectTasks } from '../api/queries/useTasks';
-import { useProjectMembers } from '../api/queries/useProjects';
+import { useGeneratePriority, useDeleteTask, useUpdateTask, useProjectTasks, useFilterProjectTasks } from '../api/queries/useTasks';
+import { useProjectMembers, useProjectOwner } from '../api/queries/useProjects';
 import CreateTaskModal from './CreateTaskModal';
 
 interface TaskListProps {
@@ -12,8 +12,21 @@ interface TaskListProps {
 function TaskList({ projectId }: TaskListProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   
+  const [filter, setFilter] = useState('none');
   // Fetch tasks using useProjectTasks hook
-  const { data: taskList, refetch } = useProjectTasks(projectId); // Automatically fetches tasks for the project
+  const { data: taskList } = useProjectTasks(projectId); // Automatically fetches tasks for the project
+  const { data: filteredTasks } = useFilterProjectTasks(projectId, filter); // Fetches tasks filtered by priority
+  const { data: owner } = useProjectOwner(projectId);
+  const [filtered, setFiltered] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (filter === 'priority' || filter === 'status') {
+      setFiltered(filteredTasks || []);
+    } else {
+      setFiltered([]);
+    }
+  }, [filter]);
+
 
   // State for editing a selected task
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -42,6 +55,7 @@ function TaskList({ projectId }: TaskListProps) {
     setEditDueDate(task.due_date || '');
     setEditPriority(task.priority || '');
     setEditStatus(task.status || '');
+    setEditAssignedTo(task.assigned_to.id || 0);
     setShowEditModal(true);
   };
 
@@ -106,21 +120,38 @@ function TaskList({ projectId }: TaskListProps) {
       <div className="task-list-header">
         <h2>Tasks</h2>
         <button onClick={() => setShowCreateModal(true)}>Create Task</button>
+        <select defaultValue={0} onChange={(e) => setFilter(e.target.value)}>
+          <option value={'none'}>Filter</option>
+          <option value={'priority'}>Priority</option>
+          <option value={'status'}>Status</option>
+        </select>
       </div>
 
       {taskList.length === 0 ? (
         <p>No tasks yet.</p>
       ) : (
         <ul className="task-list">
-          {taskList.map((t) => (
-            <li key={t.id} onClick={() => handleOpenTaskModal(t)}>
-              <strong>{t.title}</strong>
-              <p>Due: {t.due_date.split("T")[0] || 'N/A'}</p>
-              <p>Priority: {t.priority || 'N/A'}</p>
-              <p>Status: {t.status || 'N/A'}</p>
-              <p>Assigned to: {t.assigned_to.name || t.assigned_to.email}</p>
-            </li>
-          ))}
+          {
+            filtered.length > 0 ? filtered.map((task) => (
+              <li key={task.id} onClick={() => handleOpenTaskModal(task)}>
+                <h3>{task.title}</h3>
+                <p>{task.description}</p>
+                <p>Priority: {task.priority}</p>
+                <p>Status: {task.status}</p>
+                <p>Due Date: {task.due_date}</p>
+                <p>Assigned To: {task.assigned_to.name || task.assigned_to.email}</p>
+              </li>
+            )) : taskList.map((task) => (
+              <li key={task.id} onClick={() => handleOpenTaskModal(task)}>
+                <h3>{task.title}</h3>
+                <p>{task.description}</p>
+                <p>Priority: {task.priority}</p>
+                <p>Status: {task.status}</p>
+                <p>Due Date: {task.due_date}</p>
+                <p>Assigned To: {task.assigned_to.name || task.assigned_to.email}</p>
+              </li>
+            ))
+          }
         </ul>
       )}
 
@@ -187,15 +218,18 @@ function TaskList({ projectId }: TaskListProps) {
               <label htmlFor='assign-to'>Assigned To</label>
               <select
                 id='assign-to'
+                defaultValue={editAssignedTo}
                 onChange={(e) => {
                   setEditAssignedTo(Number(e.target.value));
                 }}
               >
+                <option value={0}>Unassigned</option>
                 {members?.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name || m.email}
                   </option>
                 ))}
+                <option value={owner?.id}>{owner?.name}</option>
               </select>
 
               <div className="form-buttons">

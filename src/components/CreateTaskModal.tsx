@@ -1,7 +1,7 @@
 // src/components/CreateTaskModal.tsx
 import React, { useState } from 'react';
 import { useCreateTask, useGeneratePriority } from '../api/queries/useTasks';
-import { useProjectMembers } from '../api/queries/useProjects';
+import { useProjectMembers, useProjectOwner } from '../api/queries/useProjects';
 import '../styles/TaskList.css';
 
 interface CreateTaskModalProps {
@@ -17,6 +17,7 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
   const [status, setStatus] = useState('');
   const [assignedTo, setAssignedTo] = useState(0);
   const { data: members } = useProjectMembers(projectId);
+  const { data: owner } = useProjectOwner(projectId);
 
   const createTaskMutation = useCreateTask();
   const generatePriorityMutation = useGeneratePriority();
@@ -107,10 +108,11 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
             onChange={(e) => setStatus(e.target.value)}
           />
 
-          <label htmlFor='assign-to'>Assign To</label>
+          <label htmlFor='assign-to' defaultValue={0}>Assign To</label>
           <select id='assign-to' onChange={(e) =>{
             setAssignedTo(Number(e.target.value));
           }}>
+            <option value={0}>Unassigned</option>
             {
                 members?.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -118,6 +120,7 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
                     </option>
                 ))
             }
+            <option value={owner?.id}>{owner?.name}</option>
           </select>
 
           <div className="form-buttons">
