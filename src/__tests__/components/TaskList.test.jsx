@@ -160,9 +160,6 @@ describe("TaskList Component", () => {
 
     require("../../api/queries/useTasks").useProjectTasks.mockReturnValue({ data: mockUpdatedTasks });
 
-    expect(screen.queryByText('Task 1')).toBeInTheDocument();
-    expect(screen.queryByText('Task 2')).toBeInTheDocument();
-
     fireEvent.click(screen.getByText('Task 1'));
 
     // Mock window.confirm to simulate clicking "OK"

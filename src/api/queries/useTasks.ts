@@ -104,15 +104,9 @@ export function useCreateTask() {
       return response.data;
     },
     onSuccess: (newTask) => {
-      // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ['allTasks'] });
-      // If your Task interface has assigned_to and project references:
-      if (newTask.assigned_to !== undefined) {
-        queryClient.invalidateQueries({ queryKey: ['userTasks', newTask.assigned_to] });
-      }
-      if (newTask.project !== undefined) {
-        queryClient.invalidateQueries({ queryKey: ['projectTasks', newTask.project] });
-      }
+      queryClient.invalidateQueries({ queryKey: ['taskById'] });
+      queryClient.invalidateQueries({ queryKey: ['projectTasks'] });
     },
   });
 }
@@ -237,6 +231,20 @@ export function useDeleteTask() {
       queryClient.invalidateQueries({ queryKey: ['projectTasks'] });
       // If your data model includes user or project references,
       // you can also invalidate those queries here as well.
+    },
+  });
+}
+
+/***********************************
+ * 11) GET /api/tasks/filter/{projectId}/{filter}
+ *     (Filter Project Tasks)
+ ***********************************/
+export function useFilterProjectTasks(projectId: number, filter: string) {
+  return useQuery<Task[]>({
+    queryKey: ['filterProjectTasks', projectId, filter],
+    queryFn: async () => {
+      const response = await axiosClient.get<Task[]>(`/api/tasks/filter/${projectId}/${filter}`);
+      return response.data;
     },
   });
 }
