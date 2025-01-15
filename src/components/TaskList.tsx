@@ -105,7 +105,8 @@ function TaskList({ projectId }: TaskListProps) {
   const handleGeneratePriority = async () => {
     try {
       const newPriority = await generatePriorityMutation.mutateAsync(editDesc);
-      setEditPriority(newPriority);
+      console.log(newPriority);
+            setEditPriority((newPriority.split('.')[0]).toLowerCase());
     } catch (err) {
       alert(`Error generating priority: ${err}`);
     }
@@ -196,24 +197,24 @@ function TaskList({ projectId }: TaskListProps) {
 
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <label htmlFor='priority'>Priority</label>
-                <input
-                  id='priority'
-                  type="text"
-                  value={editPriority}
-                  onChange={(e) => setEditPriority(e.target.value)}
-                />
+                <select id='priority' onChange={(e) => setEditPriority(e.target.value)} value={editPriority}>
+                  <option value=''>Select Priority</option>
+                  <option value='low'>Low</option>
+                  <option value='medium'>Medium</option>
+                  <option value='high'>High</option>
+                </select>
                 <button type="button" onClick={handleGeneratePriority}>
                   Generate Priority
                 </button>
               </div>
 
               <label htmlFor='status'>Status</label>
-              <input
-                id='status'
-                type="text"
-                value={editStatus}
-                onChange={(e) => setEditStatus(e.target.value)}
-              />
+              <select id='status' value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                <option value=''>Select Status</option>
+                <option value='TO DO'>To Do</option>
+                <option value='IN PROGRESS'>In Progress</option>
+                <option value='COMPLETED'>Completed</option>
+              </select>
 
               <label htmlFor='assign-to'>Assigned To</label>
               <select

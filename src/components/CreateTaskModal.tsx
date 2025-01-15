@@ -1,5 +1,5 @@
 // src/components/CreateTaskModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCreateTask, useGeneratePriority } from '../api/queries/useTasks';
 import { useProjectMembers, useProjectOwner } from '../api/queries/useProjects';
 import '../styles/TaskList.css';
@@ -18,9 +18,11 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
   const [assignedTo, setAssignedTo] = useState(0);
   const { data: members } = useProjectMembers(projectId);
   const { data: owner } = useProjectOwner(projectId);
+  const ref = useRef<HTMLFormElement>(null);
 
   const createTaskMutation = useCreateTask();
   const generatePriorityMutation = useGeneratePriority();
+
 
   // Submitting new task
   const handleCreateTask = (e: React.FormEvent) => {
@@ -51,7 +53,8 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
   const handleGeneratePriority = async () => {
     try {
       const newPriority = await generatePriorityMutation.mutateAsync(description);
-      setPriority(newPriority);
+      console.log(newPriority);
+      setPriority((newPriority.split('.')[0]).toLowerCase());
     } catch (err) {
       alert(`Error generating priority: ${err}`);
     }
@@ -89,24 +92,24 @@ function CreateTaskModal({ projectId, onClose }: CreateTaskModalProps) {
 
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <label htmlFor='priority'>Priority</label>
-            <input
-              id='priority'
-              type="text"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-            />
+            <select id='priority' onChange={(e) => setPriority(e.target.value)} value={priority}>
+              <option value=''>Select Priority</option>
+              <option value='low'>Low</option>
+              <option value='medium'>Medium</option>
+              <option value='high'>High</option>
+            </select>
             <button type="button" onClick={handleGeneratePriority}>
               Generate Priority
             </button>
           </div>
 
           <label htmlFor='status'>Status</label>
-          <input
-            id='status'
-            type="text"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          />
+          <select id='status' onChange={(e) => setStatus(e.target.value)} value={status}>
+            <option value=''>Select Status</option>
+            <option value='TO DO'>To Do</option>
+            <option value='IN PROGRESS'>In Progress</option>
+            <option value='COMPLETED'>Completed</option>
+          </select>
 
           <label htmlFor='assign-to' defaultValue={0}>Assign To</label>
           <select id='assign-to' onChange={(e) =>{
